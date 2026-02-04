@@ -22,14 +22,6 @@ module.exports = {
       watch: false,
     },
     {
-      name: 'universe-web',
-      script: 'bun',
-      args: 'run dev',
-      cwd: `${BASE}/oracle-universe-web`,
-      env: { PORT: 5174 },
-      watch: false,
-    },
-    {
       name: 'backend',
       script: 'go',
       args: 'run main.go serve',
