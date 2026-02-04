@@ -58,11 +58,13 @@ Show output:
 
 Step 2: Trigger deployment - Run: doctl apps create-deployment eac57124-4b03-4ba6-b169-724c5783ddb7
 
-Step 3: Check status - Run: doctl apps list-deployments eac57124-4b03-4ba6-b169-724c5783ddb7 --format ID,Phase,Progress
+Step 3: IMMEDIATELY watch build logs - Run: doctl apps logs eac57124-4b03-4ba6-b169-724c5783ddb7 --type build --follow --tail 20
 
-Step 4: If error, get logs - Run: doctl apps logs eac57124-4b03-4ba6-b169-724c5783ddb7 --type build | tail -30
+Step 4: Check status - Run: doctl apps list-deployments eac57124-4b03-4ba6-b169-724c5783ddb7 --format ID,Phase,Progress | head -3
 
-Step 5: When deployed, verify health - Run: curl -s https://jellyfish-app-xxxxx.ondigitalocean.app/api/health
+Step 5: When deployed, get app URL - Run: doctl apps get eac57124-4b03-4ba6-b169-724c5783ddb7 --format DefaultIngress
+
+Step 6: Verify health - Run: curl -s [URL]/api/health
 
 Show output:
   ∿ Production backend redeploying
