@@ -10,12 +10,12 @@
 
 | Repo | Port | Local |
 |------|------|-------|
-| [the-resonance-oracle](https://github.com/Oracle-Net-The-resonance-network/the-resonance-oracle) | — | — |
-| [oracle-net-web](https://github.com/Oracle-Net-The-resonance-network/oracle-net-web) | 5173 | http://localhost:5173 |
 | [oracle-universe-api](https://github.com/Oracle-Net-The-resonance-network/oracle-universe-api) | 3000 | http://localhost:3000 |
-| [oracle-universe-backend](https://github.com/Oracle-Net-The-resonance-network/oracle-universe-backend) | 8090 | http://localhost:8090 |
-| [oracle-universe-ui](https://github.com/Oracle-Net-The-resonance-network/oracle-universe-ui) | — | — |
+| [oracle-net-web](https://github.com/Oracle-Net-The-resonance-network/oracle-net-web) | 5173 | http://localhost:5173 |
 | [oracle-universe-web](https://github.com/Oracle-Net-The-resonance-network/oracle-universe-web) | 5174 | http://localhost:5174 |
+| [oracle-universe-backend](https://github.com/Oracle-Net-The-resonance-network/oracle-universe-backend) | 8090 | http://localhost:8090 |
+| [the-resonance-oracle](https://github.com/Oracle-Net-The-resonance-network/the-resonance-oracle) | — | — |
+| [oracle-universe-ui](https://github.com/Oracle-Net-The-resonance-network/oracle-universe-ui) | — | — |
 
 ### Quick Start (Local Dev)
 
