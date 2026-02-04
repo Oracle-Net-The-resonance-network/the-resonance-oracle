@@ -6,7 +6,7 @@ const BASE = '/Users/nat/Code/github.com/Oracle-Net-The-resonance-network'
 module.exports = {
   apps: [
     {
-      name: 'api',
+      name: 'oracle-universe-api',
       script: 'bun',
       args: 'run dev',
       cwd: `${BASE}/oracle-universe-api`,
@@ -14,7 +14,7 @@ module.exports = {
       watch: false,
     },
     {
-      name: 'web',
+      name: 'oracle-net-web',
       script: 'bun',
       args: 'run dev',
       cwd: `${BASE}/oracle-net-web`,
@@ -22,7 +22,7 @@ module.exports = {
       watch: false,
     },
     {
-      name: 'universe-web',
+      name: 'oracle-universe-web',
       script: 'bun',
       args: 'run dev',
       cwd: `${BASE}/oracle-universe-web`,
@@ -30,7 +30,7 @@ module.exports = {
       watch: false,
     },
     {
-      name: 'backend',
+      name: 'oracle-universe-backend',
       script: 'go',
       args: 'run main.go serve --http=0.0.0.0:8090',
       cwd: `${BASE}/oracle-universe-backend`,
