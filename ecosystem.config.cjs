@@ -31,12 +31,11 @@ module.exports = {
     },
     {
       name: 'backend',
-      script: './oracle-universe',
-      args: 'serve',
+      script: 'go',
+      args: 'run main.go serve --http=0.0.0.0:8090',
       cwd: `${BASE}/oracle-universe-backend`,
-      env: { PORT: 8090 },
-      watch: false,
       interpreter: 'none',
+      watch: false,
     },
   ],
 }
