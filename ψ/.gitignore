@@ -1,7 +1,19 @@
-# Untracked pillars
+# The Resonance Oracle - Brain Protection
+# These paths are private and should not be tracked
+
+# Active working files (in-progress)
 active/
+
+# Session logs (temporary)
 memory/logs/
+
+# Learn materials (symlinked from ghq)
 learn/
 
-# State files
+# Awakening state
 .awaken-state.json
+
+# System files
+.DS_Store
+*.swp
+*.swo
