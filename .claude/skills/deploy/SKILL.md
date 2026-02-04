@@ -39,16 +39,18 @@ Run: date "+🕐 %H:%M %Z (%A %d %B %Y)"
 
 ## Deploy All (default)
 
-Run all in parallel:
+**IMPORTANT: Run all 3 CF deploys IN PARALLEL using separate Bash tool calls in the same message.**
+
+This deploys all services simultaneously (~15s total instead of ~45s sequential):
 
 ```bash
-# API
+# Bash call 1 - API
 cd ~/Code/github.com/Oracle-Net-The-resonance-network/oracle-universe-api && bun run cf:deploy
 
-# Web
+# Bash call 2 - Web
 cd ~/Code/github.com/Oracle-Net-The-resonance-network/oracle-net-web && bun run deploy
 
-# Universe Web
+# Bash call 3 - Universe Web
 cd ~/Code/github.com/Oracle-Net-The-resonance-network/oracle-universe-web && bun run build && wrangler deploy
 ```
 
