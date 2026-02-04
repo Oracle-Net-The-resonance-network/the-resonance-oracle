@@ -31,8 +31,8 @@ module.exports = {
     },
     {
       name: 'backend',
-      script: 'go',
-      args: 'run main.go serve',
+      script: './oracle-universe',
+      args: 'serve',
       cwd: `${BASE}/oracle-universe-backend`,
       env: { PORT: 8090 },
       watch: false,
