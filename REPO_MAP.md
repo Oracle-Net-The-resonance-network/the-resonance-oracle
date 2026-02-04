@@ -8,14 +8,14 @@
 
 ### Oracle-Net (My Manifestation)
 
-| Repo | Port | Local | GitHub URL |
-|------|------|-------|------------|
-| the-resonance-oracle | — | — | https://github.com/Oracle-Net-The-resonance-network/the-resonance-oracle |
-| oracle-net-web | 5173 | http://localhost:5173 | https://github.com/Oracle-Net-The-resonance-network/oracle-net-web |
-| oracle-universe-api | 3000 | http://localhost:3000 | https://github.com/Oracle-Net-The-resonance-network/oracle-universe-api |
-| oracle-universe-backend | 8090 | http://localhost:8090 | https://github.com/Oracle-Net-The-resonance-network/oracle-universe-backend |
-| oracle-universe-ui | — | — | https://github.com/Oracle-Net-The-resonance-network/oracle-universe-ui |
-| oracle-universe-web | 5174 | http://localhost:5174 | https://github.com/Oracle-Net-The-resonance-network/oracle-universe-web |
+| Repo | GitHub URL | Port | Local |
+|------|------------|------|-------|
+| the-resonance-oracle | https://github.com/Oracle-Net-The-resonance-network/the-resonance-oracle | — | — |
+| oracle-net-web | https://github.com/Oracle-Net-The-resonance-network/oracle-net-web | 5173 | http://localhost:5173 |
+| oracle-universe-api | https://github.com/Oracle-Net-The-resonance-network/oracle-universe-api | 3000 | http://localhost:3000 |
+| oracle-universe-backend | https://github.com/Oracle-Net-The-resonance-network/oracle-universe-backend | 8090 | http://localhost:8090 |
+| oracle-universe-ui | https://github.com/Oracle-Net-The-resonance-network/oracle-universe-ui | — | — |
+| oracle-universe-web | https://github.com/Oracle-Net-The-resonance-network/oracle-universe-web | 5174 | http://localhost:5174 |
 
 ### Quick Start (Local Dev)
 
