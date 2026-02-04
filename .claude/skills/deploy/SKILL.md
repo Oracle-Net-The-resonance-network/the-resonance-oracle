@@ -39,20 +39,17 @@ Run: date "+🕐 %H:%M %Z (%A %d %B %Y)"
 
 ## Deploy All (default)
 
-**IMPORTANT: Run all 3 CF deploys IN PARALLEL using separate Bash tool calls in the same message.**
+**Use 3 parallel Task subagents for true parallel deployment:**
 
-This deploys all services simultaneously (~15s total instead of ~45s sequential):
-
-```bash
-# Bash call 1 - API
-cd ~/Code/github.com/Oracle-Net-The-resonance-network/oracle-universe-api && bun run cf:deploy
-
-# Bash call 2 - Web
-cd ~/Code/github.com/Oracle-Net-The-resonance-network/oracle-net-web && bun run deploy
-
-# Bash call 3 - Universe Web
-cd ~/Code/github.com/Oracle-Net-The-resonance-network/oracle-universe-web && bun run build && wrangler deploy
 ```
+Task 1 (Bash agent): cd ~/Code/github.com/Oracle-Net-The-resonance-network/oracle-universe-api && bun run cf:deploy
+Task 2 (Bash agent): cd ~/Code/github.com/Oracle-Net-The-resonance-network/oracle-net-web && bun run deploy
+Task 3 (Bash agent): cd ~/Code/github.com/Oracle-Net-The-resonance-network/oracle-universe-web && bun run build && wrangler deploy
+```
+
+Launch all 3 Task tools in a single message with `subagent_type=Bash` and `run_in_background=true`.
+
+**Alternative:** 3 parallel Bash tool calls also work but may get backgrounded by user.
 
 For backend, use `/wipe-backend --production` or trigger manually:
 ```bash
