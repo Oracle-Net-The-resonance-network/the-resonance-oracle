@@ -20,6 +20,11 @@
 ### Quick Start (Local Dev)
 
 ```bash
+# All at once with PM2
+pm2 start ecosystem.config.cjs
+pm2 logs
+
+# Or manually:
 # Terminal 1: Backend (PocketBase)
 cd oracle-universe-backend && go run main.go serve
 
