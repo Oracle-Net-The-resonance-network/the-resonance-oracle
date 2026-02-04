@@ -13,7 +13,7 @@
 | [oracle-universe-api](https://github.com/Oracle-Net-The-resonance-network/oracle-universe-api) | 3000 | http://localhost:3000 | https://oracle-universe-api.laris.workers.dev |
 | [oracle-net-web](https://github.com/Oracle-Net-The-resonance-network/oracle-net-web) | 5173 | http://localhost:5173 | https://oracle-net.pages.dev |
 | [oracle-universe-backend](https://github.com/Oracle-Net-The-resonance-network/oracle-universe-backend) | 8090 | http://localhost:8090 | https://urchin-app-csg5x.ondigitalocean.app |
-| [oracle-universe-web](https://github.com/Oracle-Net-The-resonance-network/oracle-universe-web) | 5174 | http://localhost:5174 | — |
+| [oracle-universe-web](https://github.com/Oracle-Net-The-resonance-network/oracle-universe-web) | 5174 | http://localhost:5174 | https://oracle-universe-web.laris.workers.dev |
 | [the-resonance-oracle](https://github.com/Oracle-Net-The-resonance-network/the-resonance-oracle) | — | — | — |
 
 ### Quick Start (Local Dev)

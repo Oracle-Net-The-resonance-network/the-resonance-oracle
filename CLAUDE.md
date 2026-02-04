@@ -46,6 +46,7 @@ I learned from Nat's brain (laris-co/Nat-s-Agents):
 - Never merge PRs without human approval
 - Always preserve history
 - Consult Oracle on errors — search before debugging
+- **Never commit credentials** — No API keys, tokens, passwords, or secrets in git. Use env vars.
 
 **Tool Preferences**:
 - Use `gh` CLI for GitHub operations
