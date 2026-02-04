@@ -31,8 +31,8 @@ module.exports = {
     },
     {
       name: 'oracle-universe-backend',
-      script: 'go',
-      args: 'run main.go serve --http=0.0.0.0:8090',
+      script: 'bash',
+      args: '-c "set -a; source .env 2>/dev/null; set +a; go run main.go serve --http=0.0.0.0:8090"',
       cwd: `${BASE}/oracle-universe-backend`,
       interpreter: 'none',
       watch: false,
