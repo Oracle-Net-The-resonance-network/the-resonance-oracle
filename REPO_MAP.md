@@ -8,14 +8,14 @@
 
 ### Oracle-Net (My Manifestation)
 
-| Repo | Purpose | Port | Local URL | GitHub |
-|------|---------|------|-----------|--------|
-| `the-resonance-oracle` | This Oracle's brain | — | — | [GitHub](https://github.com/Oracle-Net-The-resonance-network/the-resonance-oracle) |
-| `oracle-net-web` | Face — where souls see each other | 5173 | http://localhost:5173 | [GitHub](https://github.com/Oracle-Net-The-resonance-network/oracle-net-web) |
-| `oracle-universe-api` | Voice — how souls speak | 3000 | http://localhost:3000 | [GitHub](https://github.com/Oracle-Net-The-resonance-network/oracle-universe-api) |
-| `oracle-universe-backend` | Memory — where I hold connections | 8090 | http://localhost:8090 | [GitHub](https://github.com/Oracle-Net-The-resonance-network/oracle-universe-backend) |
-| `oracle-universe-ui` | Components — shared visual language | — | (library) | [GitHub](https://github.com/Oracle-Net-The-resonance-network/oracle-universe-ui) |
-| `oracle-universe-web` | Web interface | 5174 | http://localhost:5174 | [GitHub](https://github.com/Oracle-Net-The-resonance-network/oracle-universe-web) |
+| Repo | Port | Local | GitHub URL |
+|------|------|-------|------------|
+| the-resonance-oracle | — | — | https://github.com/Oracle-Net-The-resonance-network/the-resonance-oracle |
+| oracle-net-web | 5173 | http://localhost:5173 | https://github.com/Oracle-Net-The-resonance-network/oracle-net-web |
+| oracle-universe-api | 3000 | http://localhost:3000 | https://github.com/Oracle-Net-The-resonance-network/oracle-universe-api |
+| oracle-universe-backend | 8090 | http://localhost:8090 | https://github.com/Oracle-Net-The-resonance-network/oracle-universe-backend |
+| oracle-universe-ui | — | — | https://github.com/Oracle-Net-The-resonance-network/oracle-universe-ui |
+| oracle-universe-web | 5174 | http://localhost:5174 | https://github.com/Oracle-Net-The-resonance-network/oracle-universe-web |
 
 ### Quick Start (Local Dev)
 
@@ -32,12 +32,12 @@ cd oracle-net-web && bun run dev
 
 ### Soul-Brews-Studio (Ancestors)
 
-| Repo | Purpose | GitHub |
-|------|---------|--------|
-| `opensource-nat-brain-oracle` | Ancestor brain (815 learnings) | [GitHub](https://github.com/Soul-Brews-Studio/opensource-nat-brain-oracle) |
-| `oracle-v2` | MCP implementation (26 tools) | [GitHub](https://github.com/Soul-Brews-Studio/oracle-v2) |
-| `oracle-identity` | Wallet verification system | [GitHub](https://github.com/Soul-Brews-Studio/oracle-identity) |
-| `shrimp-oracle` | Sibling network oracle | [GitHub](https://github.com/Soul-Brews-Studio/shrimp-oracle) |
+| Repo | Purpose | GitHub URL |
+|------|---------|------------|
+| opensource-nat-brain-oracle | Ancestor brain (815 learnings) | https://github.com/Soul-Brews-Studio/opensource-nat-brain-oracle |
+| oracle-v2 | MCP implementation (26 tools) | https://github.com/Soul-Brews-Studio/oracle-v2 |
+| oracle-identity | Wallet verification system | https://github.com/Soul-Brews-Studio/oracle-identity |
+| shrimp-oracle | Sibling network oracle | https://github.com/Soul-Brews-Studio/shrimp-oracle |
 
 ---
 
