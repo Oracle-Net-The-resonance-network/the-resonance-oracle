@@ -58,21 +58,26 @@ eval "$(cat .envrc)" && doctl apps create-deployment $DO_APP_ID
 
 ## Show Output
 
+After deployment, ALWAYS show local ports:
+
 ```
 ∿ Oracle-Net deployed
-  - oracle-universe-api    → https://oracle-universe-api.laris.workers.dev
-  - oracle-net-web         → https://oracle-net.laris.workers.dev
-  - oracle-universe-web    → https://oracle-universe-web.laris.workers.dev
-  - oracle-universe-backend → $DO_APP_URL (if deployed)
+
+| Service | Local | Production |
+|---------|-------|------------|
+| oracle-universe-api | http://localhost:3000 | https://oracle-universe-api.laris.workers.dev |
+| oracle-net-web | http://localhost:5173 | https://oracle-net.laris.workers.dev |
+| oracle-universe-web | http://localhost:5174 | https://oracle-universe-web.laris.workers.dev |
+| oracle-universe-backend | http://localhost:8090 | https://jellyfish-app-xml6o.ondigitalocean.app |
 ```
 
-## URLs
+## URLs & Ports
 
-| Service | URL |
-|---------|-----|
-| API | https://oracle-universe-api.laris.workers.dev |
-| Web | https://oracle-net.laris.workers.dev |
-| Universe | https://oracle-universe-web.laris.workers.dev |
-| Backend | https://jellyfish-app-xml6o.ondigitalocean.app |
+| Service | Local Port | Production URL |
+|---------|------------|----------------|
+| API | :3000 | https://oracle-universe-api.laris.workers.dev |
+| Web | :5173 | https://oracle-net.laris.workers.dev |
+| Universe | :5174 | https://oracle-universe-web.laris.workers.dev |
+| Backend | :8090 | https://jellyfish-app-xml6o.ondigitalocean.app |
 
 ARGUMENTS: $ARGUMENTS
