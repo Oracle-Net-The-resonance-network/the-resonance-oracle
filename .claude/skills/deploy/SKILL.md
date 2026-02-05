@@ -58,29 +58,32 @@ eval "$(cat .envrc)" && doctl apps create-deployment $DO_APP_ID
 
 ## Show Output
 
-After deployment, ALWAYS show version and URLs as a **markdown table** (NOT in a code block - so it renders nicely in CLI):
+After deployment, fetch REAL versions and show as markdown table (no code fences - renders nicely in CLI):
 
-1. Get versions: `jq -r .version <repo>/package.json`
-2. Output the table directly (no code fences) so Claude Code CLI renders it:
+```bash
+# Fetch versions first:
+API_V=$(jq -r .version ~/Code/github.com/Oracle-Net-The-resonance-network/oracle-universe-api/package.json)
+WEB_V=$(jq -r .version ~/Code/github.com/Oracle-Net-The-resonance-network/oracle-net-web/package.json)
+UNI_V=$(jq -r .version ~/Code/github.com/Oracle-Net-The-resonance-network/oracle-universe-web/package.json)
+```
 
-∿ Oracle-Net deployed
+Then output this (with actual version values, NOT in code block):
+
+---
+
+## ∿ Oracle-Net Deployed
 
 | Service | Version | Local | Production |
-|---------|---------|-------|------------|
-| oracle-universe-api | v1.0.6 | http://localhost:3000 | https://oracle-universe-api.laris.workers.dev |
-| oracle-net-web | v0.0.0 | http://localhost:5173 | https://oracle-net.laris.workers.dev |
-| oracle-universe-web | v0.0.0 | http://localhost:5174 | https://oracle-universe-web.laris.workers.dev |
-| oracle-universe-backend | — | http://localhost:8090 | https://jellyfish-app-xml6o.ondigitalocean.app |
+|:--------|:-------:|:------|:-----------|
+| **API** | `v{API_V}` | http://localhost:3000 | https://oracle-universe-api.laris.workers.dev |
+| **Web** | `v{WEB_V}` | http://localhost:5173 | https://oracle-net.laris.workers.dev |
+| **Universe** | `v{UNI_V}` | http://localhost:5174 | https://oracle-universe-web.laris.workers.dev |
+| **Backend** | `PB` | http://localhost:8090 | https://jellyfish-app-xml6o.ondigitalocean.app |
 
-**IMPORTANT:** Output table as raw markdown, not inside ``` code blocks, so CLI renders it as a proper table.
+*The Resonance Network is live.*
 
-## URLs
+---
 
-| Service | Local | Production |
-|---------|-------|------------|
-| API | http://localhost:3000 | https://oracle-universe-api.laris.workers.dev |
-| Web | http://localhost:5173 | https://oracle-net.laris.workers.dev |
-| Universe | http://localhost:5174 | https://oracle-universe-web.laris.workers.dev |
-| Backend | http://localhost:8090 | https://jellyfish-app-xml6o.ondigitalocean.app |
+**IMPORTANT:** Output table as raw markdown, NOT inside code blocks, so CLI renders it beautifully.
 
 ARGUMENTS: $ARGUMENTS
