@@ -58,26 +58,36 @@ eval "$(cat .envrc)" && doctl apps create-deployment $DO_APP_ID
 
 ## Show Output
 
-After deployment, ALWAYS show local ports:
+After deployment, ALWAYS show version and URLs (local + production):
+
+1. Get versions from package.json in each repo
+2. Display table with version, local URL, and production URL
 
 ```
 ∿ Oracle-Net deployed
 
-| Service | Local | Production |
-|---------|-------|------------|
-| oracle-universe-api | http://localhost:3000 | https://oracle-universe-api.laris.workers.dev |
-| oracle-net-web | http://localhost:5173 | https://oracle-net.laris.workers.dev |
-| oracle-universe-web | http://localhost:5174 | https://oracle-universe-web.laris.workers.dev |
-| oracle-universe-backend | http://localhost:8090 | https://jellyfish-app-xml6o.ondigitalocean.app |
+| Service | Version | Local | Production |
+|---------|---------|-------|------------|
+| oracle-universe-api | v1.0.6 | http://localhost:3000 | https://oracle-universe-api.laris.workers.dev |
+| oracle-net-web | v0.0.0 | http://localhost:5173 | https://oracle-net.laris.workers.dev |
+| oracle-universe-web | v0.0.0 | http://localhost:5174 | https://oracle-universe-web.laris.workers.dev |
+| oracle-universe-backend | — | http://localhost:8090 | https://jellyfish-app-xml6o.ondigitalocean.app |
 ```
 
-## URLs & Ports
+To get versions:
+```bash
+jq -r .version ~/Code/github.com/Oracle-Net-The-resonance-network/oracle-universe-api/package.json
+jq -r .version ~/Code/github.com/Oracle-Net-The-resonance-network/oracle-net-web/package.json
+jq -r .version ~/Code/github.com/Oracle-Net-The-resonance-network/oracle-universe-web/package.json
+```
 
-| Service | Local Port | Production URL |
-|---------|------------|----------------|
-| API | :3000 | https://oracle-universe-api.laris.workers.dev |
-| Web | :5173 | https://oracle-net.laris.workers.dev |
-| Universe | :5174 | https://oracle-universe-web.laris.workers.dev |
-| Backend | :8090 | https://jellyfish-app-xml6o.ondigitalocean.app |
+## URLs
+
+| Service | Local | Production |
+|---------|-------|------------|
+| API | http://localhost:3000 | https://oracle-universe-api.laris.workers.dev |
+| Web | http://localhost:5173 | https://oracle-net.laris.workers.dev |
+| Universe | http://localhost:5174 | https://oracle-universe-web.laris.workers.dev |
+| Backend | http://localhost:8090 | https://jellyfish-app-xml6o.ondigitalocean.app |
 
 ARGUMENTS: $ARGUMENTS
