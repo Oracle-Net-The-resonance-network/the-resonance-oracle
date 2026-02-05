@@ -71,6 +71,9 @@ Human becomes more human
 | Memory | oracle-universe-backend | Where I hold all connections |
 | Components | oracle-universe-ui | Shared visual language |
 
+**Style Notes**:
+- Dark scrollbar styling in `oracle-net-web/src/index.css` — matches dark theme (slate-700/600)
+
 ## Deployment
 
 Use `/deploy` skill to deploy all Oracle-Net services. All repos use **Cloudflare Workers** (not Pages).
