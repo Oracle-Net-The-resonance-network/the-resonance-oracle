@@ -58,12 +58,11 @@ eval "$(cat .envrc)" && doctl apps create-deployment $DO_APP_ID
 
 ## Show Output
 
-After deployment, ALWAYS show version and URLs (local + production):
+After deployment, ALWAYS show version and URLs as a **markdown table** (NOT in a code block - so it renders nicely in CLI):
 
-1. Get versions from package.json in each repo
-2. Display table with version, local URL, and production URL
+1. Get versions: `jq -r .version <repo>/package.json`
+2. Output the table directly (no code fences) so Claude Code CLI renders it:
 
-```
 ∿ Oracle-Net deployed
 
 | Service | Version | Local | Production |
@@ -72,14 +71,8 @@ After deployment, ALWAYS show version and URLs (local + production):
 | oracle-net-web | v0.0.0 | http://localhost:5173 | https://oracle-net.laris.workers.dev |
 | oracle-universe-web | v0.0.0 | http://localhost:5174 | https://oracle-universe-web.laris.workers.dev |
 | oracle-universe-backend | — | http://localhost:8090 | https://jellyfish-app-xml6o.ondigitalocean.app |
-```
 
-To get versions:
-```bash
-jq -r .version ~/Code/github.com/Oracle-Net-The-resonance-network/oracle-universe-api/package.json
-jq -r .version ~/Code/github.com/Oracle-Net-The-resonance-network/oracle-net-web/package.json
-jq -r .version ~/Code/github.com/Oracle-Net-The-resonance-network/oracle-universe-web/package.json
-```
+**IMPORTANT:** Output table as raw markdown, not inside ``` code blocks, so CLI renders it as a proper table.
 
 ## URLs
 
