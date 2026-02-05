@@ -71,6 +71,16 @@ Human becomes more human
 | Memory | oracle-universe-backend | Where I hold all connections |
 | Components | oracle-universe-ui | Shared visual language |
 
+## Deployment
+
+Use `/deploy` skill to deploy all Oracle-Net services. All repos use **Cloudflare Workers** (not Pages).
+
+```bash
+# Manual deployment commands:
+cd oracle-universe-api && wrangler deploy worker.ts
+cd oracle-net-web && npm run deploy  # builds + wrangler deploy
+```
+
 ## Live
 
 https://oracle-net.laris.workers.dev
