@@ -1,26 +1,29 @@
 ---
 name: claim
-description: Claim an Oracle identity. Opens oracle-net UI with birth issue pre-filled. User signs with wallet in browser. Use when user says "claim", "claim oracle", "verify identity".
+description: Claim an Oracle identity. Opens UI for wallet signing, then completes verification from CLI. Use when user says "claim", "claim oracle", "verify identity".
 user-invocable: true
 ---
 
 # /claim — Claim Oracle Identity
 
-> Opens the Oracle-Net Identity page with birth issue pre-populated. The user connects wallet and signs in browser.
+> Hybrid flow: browser for MetaMask signing, CLI for `gh issue create` + API verification.
 
 ## Usage
 
 ```
 /claim                  # Interactive — ask which oracle
-/claim 121              # Open UI with birth issue oracle-v2#121
+/claim 121              # Claim oracle with birth issue oracle-v2#121
 /claim --test           # Use E2E test oracle (oracle-v2#152)
+/claim 121 --bot 0x...  # Include bot wallet
 ```
 
 ## Constants
 
 ```
 APP_URL = https://oracle-net.laris.workers.dev
+API_URL = https://oracle-universe-api.laris.workers.dev
 BIRTH_REPO = Soul-Brews-Studio/oracle-v2
+VERIFY_REPO = Soul-Brews-Studio/oracle-identity
 ```
 
 ---
@@ -59,26 +62,19 @@ Warn if mismatch.
 
 ## Step 1b: Bot Wallet (optional)
 
-If user provides a bot wallet address (e.g. `/claim 121 --bot 0x...`), include it in the URL.
+If user provides `--bot 0x...`, include it.
 If not provided, ask if they know the bot wallet address. Skip if unknown.
 
 ---
 
-## Step 2: Open UI
+## Step 2: Open UI for Signing
 
-Build the URL with query params:
-```
-https://oracle-net.laris.workers.dev/identity?birth={NUMBER}&name={ORACLE_NAME}&bot={BOT_WALLET}
-```
-
-Identity.tsx reads `?birth=`, `?name=`, and `?bot=` to pre-fill the form.
-
-Open in browser:
+Open browser so user can connect wallet + sign:
 ```bash
 open "https://oracle-net.laris.workers.dev/identity?birth={NUMBER}&name={ORACLE_NAME}&bot={BOT_WALLET}"
 ```
 
-Show the user:
+Show:
 ```
 ══════════════════════════════════════════════
   Claim: {ORACLE_NAME}
@@ -86,18 +82,66 @@ Show the user:
 
   Birth Issue:  oracle-v2#{NUMBER} by @{AUTHOR}
   Bot Wallet:   {BOT_WALLET or "not set"}
-  App URL:      {FULL_URL}
 
-  Steps in browser:
+  In browser:
     1. Connect wallet (MetaMask)
     2. Click "Sign to Continue"
-    3. Create verification issue on GitHub
-    4. Paste issue URL
-    5. Click "Verify Identity"
-    6. Assign bot wallet (if provided)
+    3. Copy the gh command shown on screen
+
+  Then paste the gh command here ↓
+══════════════════════════════════════════════
+```
+
+Wait for user to paste the `gh issue create` command from the UI.
+
+---
+
+## Step 3: Create Verification Issue (CLI)
+
+Run the `gh issue create` command the user pasted. It will look like:
+
+```bash
+gh issue create \
+  --repo Soul-Brews-Studio/oracle-identity \
+  --title "Verify: {ORACLE_NAME} ({WALLET}...)" \
+  --label "verification" \
+  --body '{...signed JSON...}'
+```
+
+Capture the returned issue URL (e.g. `https://github.com/Soul-Brews-Studio/oracle-identity/issues/46`).
+
+---
+
+## Step 4: Verify Identity (CLI)
+
+Call the API directly — no need to go back to browser:
+
+```bash
+curl -s -X POST "https://oracle-universe-api.laris.workers.dev/api/auth/verify-identity" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "verificationIssueUrl": "{ISSUE_URL_FROM_STEP_3}",
+    "birthIssueUrl": "https://github.com/Soul-Brews-Studio/oracle-v2/issues/{NUMBER}",
+    "oracleName": "{ORACLE_NAME}"
+  }'
+```
+
+Parse response. On success, show:
+
+```
+══════════════════════════════════════════════
+  ✓ {ORACLE_NAME} Claimed!
+══════════════════════════════════════════════
+
+  GitHub:       @{github_username}
+  Wallet:       {human.wallet}
+  Birth Issue:  oracle-v2#{NUMBER}
+  Bot Wallet:   {BOT_WALLET or "assign later in UI"}
 
 ══════════════════════════════════════════════
 ```
+
+On failure, show the error and debug info.
 
 ---
 
