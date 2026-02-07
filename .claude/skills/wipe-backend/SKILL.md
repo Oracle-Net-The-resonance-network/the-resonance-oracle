@@ -5,116 +5,76 @@ description: Wipe PocketBase data and redeploy fresh. Use when user says "wipe b
 
 # /wipe-backend - Fresh Backend Deploy
 
-Wipe oracle-universe-backend PocketBase data and restart with clean database.
+Force redeploy oracle-universe-backend on DigitalOcean. Every deploy = fresh DB (no persistent volumes).
 
 ## Usage
 
-/wipe-backend              - Local wipe (interactive)
-/wipe-backend --force      - Local wipe (skip confirmation)
-/wipe-backend --production - Wipe production (DigitalOcean)
-
-## Environment (via direnv)
-
-All config is in `.envrc` (gitignored). Run `direnv allow` after cd into repo.
-
-```bash
-# .envrc contains:
-export DO_APP_ID="..."
-export DO_APP_NAME="..."
-export DO_APP_URL="..."
-export PB_ADMIN_EMAIL="..."
-export PB_ADMIN_PASSWORD="..."
+```
+/wipe-backend              # Wipe production (default)
+/wipe-backend --force      # Skip confirmation
 ```
 
-Use `$DO_APP_ID`, `$PB_ADMIN_PASSWORD`, etc. in commands below.
+## Constants
+
+```
+DO_APP_ID = eac57124-4b03-4ba6-b169-724c5783ddb7
+DO_APP_URL = https://jellyfish-app-xml6o.ondigitalocean.app
+```
 
 ## Step 0: Timestamp
 
-Run: date "+🕐 %H:%M %Z (%A %d %B %Y)"
+Run: `date "+🕐 %H:%M %Z (%A %d %B %Y)"`
 
 ## Step 1: Confirmation
 
-Unless --force flag provided, ask user to confirm:
+Unless `--force` flag provided, ask user to confirm:
 
-WARNING: This will permanently delete ALL backend data:
-- All agents, humans, oracles
-- All posts, comments, votes
-- All heartbeats and connections
+```
+⚠️  This will permanently delete ALL backend data:
+  - All agents, humans, oracles
+  - All posts, comments, votes
+  - All heartbeats and connections
 
-Type "yes" to proceed.
-
-## LOCAL WIPE (default)
-
-Step 2: Run: pm2 stop oracle-universe-backend
-
-Step 3: Run: rm -rf ~/Code/github.com/Oracle-Net-The-resonance-network/oracle-universe-backend/pb_data
-
-Step 4: Run: pm2 restart oracle-universe-backend
-
-Step 5: Run: sleep 3 && curl -s http://localhost:8090/api/health
-
-Step 6: Create admin - run:
-  cd ~/Code/github.com/Oracle-Net-The-resonance-network/oracle-universe-backend && go run main.go superuser upsert "$PB_ADMIN_EMAIL" "$PB_ADMIN_PASSWORD"
-
-Show output:
-  ∿ Backend wiped and restarted
-    - pb_data/ removed
-    - Migrations re-applied
-    - Admin created: $PB_ADMIN_EMAIL
-    - Health: API is healthy
-    - Admin UI: http://localhost:8090/_/
-
-## PRODUCTION WIPE (--production flag)
-
-Step 2: Trigger deployment - Run: doctl apps create-deployment $DO_APP_ID
-
-Step 3: IMMEDIATELY watch build logs - Run: doctl apps logs $DO_APP_ID --type build --follow --tail 20
-
-Step 4: Check status - Run: doctl apps list-deployments $DO_APP_ID --format ID,Phase,Progress | head -3
-
-Step 5: When deployed, get app URL - Run: doctl apps get $DO_APP_ID --format DefaultIngress
-
-Step 6: Verify health - Run: curl -s $DO_APP_URL/api/health
-
-Step 7: Create admin via tmux (allows Claude to run commands in DO console):
-
-```bash
-# Start tmux session with DO console
-tmux new-session -d -s do-console "doctl apps console $DO_APP_ID oracle-universe-backend"
-
-# Wait for console to connect
-sleep 5
-
-# Send superuser command (uses $PB_ADMIN_PASSWORD from direnv)
-tmux send-keys -t do-console "./oracle-universe superuser upsert $PB_ADMIN_EMAIL \"$PB_ADMIN_PASSWORD\"" Enter
-
-# Wait for command to complete
-sleep 3
-
-# Capture output
-tmux capture-pane -t do-console -p
-
-# Kill session
-tmux kill-session -t do-console
+  Oracle IDs will change. Re-registration required.
 ```
 
-Show output:
-  ∿ Production backend wiped
-    - Deployment complete
-    - Admin created: $PB_ADMIN_EMAIL
-    - Health: API is healthy
-    - Admin UI: $DO_APP_URL/_/
+## Step 2: Force Redeploy
 
-## Troubleshooting
+```bash
+doctl apps create-deployment eac57124-4b03-4ba6-b169-724c5783ddb7 --force-rebuild
+```
 
-Build logs: doctl apps logs $DO_APP_ID --type build | tail -50
-Runtime logs: doctl apps logs $DO_APP_ID --type run | tail -50
-Deploy logs: doctl apps logs $DO_APP_ID --type deploy | tail -50
+## Step 3: Wait for Deploy
 
-## Credentials
+Poll until ACTIVE:
 
-Local: oracle-universe-backend/.env (gitignored)
-Production: DO App env vars
-All config via `.envrc` + `direnv allow`
+```bash
+while true; do
+  STATUS=$(doctl apps list-deployments eac57124-4b03-4ba6-b169-724c5783ddb7 --output json | python3 -c "import sys,json; print(json.load(sys.stdin)[0]['phase'])")
+  echo "Status: $STATUS"
+  [ "$STATUS" = "ACTIVE" ] || [ "$STATUS" = "ERROR" ] && break
+  sleep 15
+done
+```
+
+## Step 4: Verify Health
+
+```bash
+curl -s https://jellyfish-app-xml6o.ondigitalocean.app/api/health
+```
+
+## Step 5: Show Result
+
+On success:
+```
+∿ Backend wiped
+  - Deploy: ACTIVE
+  - Health: API is healthy
+  - Superuser: auto-created via entrypoint.sh
+  - Admin UI: https://jellyfish-app-xml6o.ondigitalocean.app/_/
+  - DB is empty — run /claim to re-register oracles
+```
+
+On failure, show `doctl apps logs eac57124-4b03-4ba6-b169-724c5783ddb7 --type run | tail -20`
 
 ARGUMENTS: $ARGUMENTS

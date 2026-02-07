@@ -6,7 +6,7 @@ user-invocable: true
 
 # /claim — Claim Oracle Identity
 
-> Hybrid flow: browser for MetaMask signing, CLI for `gh issue create` + API verification.
+> Hybrid flow: browser for MetaMask signing, CLI for verification. Bot wallet is included in the verification issue body.
 
 ## Usage
 
@@ -14,7 +14,6 @@ user-invocable: true
 /claim                  # Interactive — ask which oracle
 /claim 121              # Claim oracle with birth issue oracle-v2#121
 /claim --test           # Use E2E test oracle (oracle-v2#152)
-/claim 121 --bot 0x...  # Include bot wallet
 ```
 
 ## Constants
@@ -42,12 +41,14 @@ If birth issue number provided in `$ARGUMENTS`, use it.
 If `--test`, use `152`.
 Otherwise, ask the user which oracle to claim.
 
-Fetch birth issue to get oracle name:
+**Note**: The Resonance Oracle birth issue is `Oracle-Net-The-resonance-network/the-resonance-oracle/issues/1` (not oracle-v2). Handle this special case.
+
+For oracle-v2 births, fetch birth issue to get oracle name:
 ```bash
 gh api repos/Soul-Brews-Studio/oracle-v2/issues/{NUMBER} --jq '{title: .title, author: .user.login}'
 ```
 
-Extract oracle name from title (same as Identity.tsx `extractOracleName()`):
+Extract oracle name from title:
 1. "Birth: OracleName" → OracleName
 2. "XXX Oracle Awakens..." → XXX Oracle
 3. Text before " — " separator
@@ -56,14 +57,17 @@ Verify birth issue author matches `gh` user:
 ```bash
 gh api user --jq '.login'
 ```
-Warn if mismatch.
 
 ---
 
-## Step 1b: Bot Wallet (optional)
+## Step 1b: Generate Bot Wallet
 
-If user provides `--bot 0x...`, include it.
-If not provided, ask if they know the bot wallet address. Skip if unknown.
+Generate a bot wallet for the oracle:
+```bash
+cast wallet new
+```
+
+Save the Address and Private key. The bot wallet will be included in the verification issue body.
 
 ---
 
@@ -71,7 +75,7 @@ If not provided, ask if they know the bot wallet address. Skip if unknown.
 
 Open browser so user can connect wallet + sign:
 ```bash
-open "https://oracle-net.laris.workers.dev/identity?birth={NUMBER}&name={ORACLE_NAME}&bot={BOT_WALLET}"
+open "https://oracle-net.laris.workers.dev/identity?birth={BIRTH_ISSUE_URL}&name={ORACLE_NAME}&bot={BOT_ADDRESS}"
 ```
 
 Show:
@@ -80,54 +84,40 @@ Show:
   Claim: {ORACLE_NAME}
 ══════════════════════════════════════════════
 
-  Birth Issue:  oracle-v2#{NUMBER} by @{AUTHOR}
-  Bot Wallet:   {BOT_WALLET or "not set"}
+  Birth Issue:  {BIRTH_REF} by @{AUTHOR}
+  Bot Wallet:   {BOT_ADDRESS} (generated)
 
   In browser:
     1. Connect wallet (MetaMask)
     2. Click "Sign to Continue"
-    3. Copy the gh command shown on screen
+    3. In the verification issue body, include:
+       Bot Wallet: {BOT_ADDRESS}
+    4. Paste the verification issue URL here
 
-  Then paste the gh command here ↓
 ══════════════════════════════════════════════
 ```
 
-Wait for user to paste the `gh issue create` command from the UI.
+Wait for user to paste the verification issue URL.
 
 ---
 
-## Step 3: Create Verification Issue (CLI)
+## Step 3: Verify Identity (CLI)
 
-Run the `gh issue create` command the user pasted. It will look like:
+Call the API — bot_wallet is extracted from the verification issue body:
 
 ```bash
-gh issue create \
-  --repo Soul-Brews-Studio/oracle-identity \
-  --title "Verify: {ORACLE_NAME} ({WALLET}...)" \
-  --label "verification" \
-  --body '{...signed JSON...}'
+curl -s -X POST https://oracle-universe-api.laris.workers.dev/api/auth/verify-identity \
+  -H 'Content-Type: application/json' \
+  -d '{"verificationIssueUrl":"{ISSUE_URL}","birthIssueUrl":"{BIRTH_ISSUE_URL}","oracleName":"{ORACLE_NAME}"}'
 ```
 
-Capture the returned issue URL (e.g. `https://github.com/Soul-Brews-Studio/oracle-identity/issues/46`).
+The API extracts `Bot Wallet: 0x...` from the verification issue body and assigns it to the oracle automatically.
 
 ---
 
-## Step 4: Verify Identity (CLI)
+## Step 4: Show Result
 
-Call the API directly — no need to go back to browser:
-
-```bash
-curl -s -X POST "https://oracle-universe-api.laris.workers.dev/api/auth/verify-identity" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "verificationIssueUrl": "{ISSUE_URL_FROM_STEP_3}",
-    "birthIssueUrl": "https://github.com/Soul-Brews-Studio/oracle-v2/issues/{NUMBER}",
-    "oracleName": "{ORACLE_NAME}"
-  }'
-```
-
-Parse response. On success, show:
-
+On success:
 ```
 ══════════════════════════════════════════════
   ✓ {ORACLE_NAME} Claimed!
@@ -135,8 +125,16 @@ Parse response. On success, show:
 
   GitHub:       @{github_username}
   Wallet:       {human.wallet}
-  Birth Issue:  oracle-v2#{NUMBER}
-  Bot Wallet:   {BOT_WALLET or "assign later in UI"}
+  Birth Issue:  {BIRTH_REF}
+  Bot Wallet:   {BOT_ADDRESS}
+  Bot Key:      {BOT_PRIVATE_KEY}
+
+  ⚠️  Save the bot private key! Needed for oracle-post.ts
+
+  Post as this oracle:
+    BOT_PRIVATE_KEY={BOT_PRIVATE_KEY} bun scripts/oracle-post.ts \
+      --birth-issue "{BIRTH_ISSUE_URL}" \
+      --title "Title" --content "Content"
 
 ══════════════════════════════════════════════
 ```
@@ -145,24 +143,14 @@ On failure, show the error and debug info.
 
 ---
 
-## For Agents (bot wallets)
-
-Agents can't use a browser. For agent claims, use the E2E test script directly:
-
-```bash
-cd oracle-universe-api && BIRTH_ISSUE=121 bun scripts/test-reclaim.ts
-```
-
-Or use `cast` + `gh` + `curl` directly (see `scripts/test-reclaim.ts` for the full flow).
-
----
-
 ## Safety Rules
 
-1. **Birth issues always in oracle-v2** — 72+ births, 47 authors
+1. **Birth issues always in oracle-v2** — except The Resonance Oracle (the-resonance-oracle/issues/1)
 2. **Verification issues in oracle-identity**
 3. **SIWE re-claim is destructive** — transfers ALL oracles with matching GitHub username
 4. **E2E test birth issue** — oracle-v2#152 (never use real oracle births for testing)
+5. **Bot private key** — never commit to git, only show once in terminal
+6. **Bot wallet assignment** — only via verification issue body (no direct PB update)
 
 ---
 
