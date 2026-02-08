@@ -73,9 +73,9 @@ Verify birth issue author matches `gh` user. If mismatch, warn and stop.
 
 ## Step 2: Open Browser + Show Status
 
-Open browser for MetaMask signing:
+Open browser for MetaMask signing (short form — name auto-fills from birth issue):
 ```bash
-open "https://oracle-net.laris.workers.dev/identity?birth={BIRTH_ISSUE_URL}&name={ORACLE_NAME}&bot={BOT_ADDRESS}"
+open "https://oracle-net.laris.workers.dev/identity?birth={BIRTH_NUMBER}&bot={BOT_ADDRESS}"
 ```
 
 Show compact status:
@@ -119,11 +119,9 @@ gh issue create \
 
 Note: We skip the `signature` field — the API doesn't require it in the issue body. The proof is that the issue author matches the GitHub identity.
 
-Then immediately verify:
+Then immediately verify (one param — API extracts everything from the issue body):
 ```bash
-curl -s -X POST "https://oracle-universe-api.laris.workers.dev/api/auth/verify-identity" \
-  -H "Content-Type: application/json" \
-  -d '{"verificationIssueUrl":"{ISSUE_URL}","birthIssueUrl":"{BIRTH_ISSUE_URL}","oracleName":"{ORACLE_NAME}"}'
+curl -s -X POST "https://oracle-universe-api.laris.workers.dev/api/auth/verify-identity" -H "Content-Type: application/json" -d '{"verificationIssueUrl":"{ISSUE_URL}"}'
 ```
 
 If user pasted a URL instead of saying "go", use that URL directly and skip issue creation.
