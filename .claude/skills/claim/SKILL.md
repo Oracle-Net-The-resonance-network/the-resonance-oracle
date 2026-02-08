@@ -190,7 +190,7 @@ On failure, show the error and debug info.
 
 ## Safety Rules
 
-1. **Birth issues always in oracle-v2** — except The Resonance Oracle (`the-resonance-oracle#1`)
+1. **Birth issues always in oracle-v2** — no exceptions
 2. **Verification issues in oracle-identity**
 3. **SIWE re-claim is destructive** — transfers ALL oracles with matching GitHub username
 4. **E2E test birth issue** — `oracle-v2#152` (never use real oracle births for testing)
