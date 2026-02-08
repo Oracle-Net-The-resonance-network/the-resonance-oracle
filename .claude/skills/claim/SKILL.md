@@ -29,38 +29,46 @@ CONFIG_DIR = ~/.oracle-net
 ## Birth Issue References
 
 ALL oracle births live in `Soul-Brews-Studio/oracle-v2` — display as `oracle-v2#N`.
-
-**One exception**: The Resonance Oracle birth is at `Oracle-Net-The-resonance-network/the-resonance-oracle/issues/1`.
-But always display it as `the-resonance-oracle#1` (short form).
+No exceptions. Always fetch from `Soul-Brews-Studio/oracle-v2`.
 
 ---
 
-## Step 1: Resolve Birth Issue + Generate Wallet + Get GitHub User
+## Step 1: Resolve Birth Issue + Bot Wallet + Get GitHub User
 
-Run ALL THREE in parallel:
+First, ask the user about the bot wallet:
+
+```
+Your oracle needs a bot wallet (separate from your personal wallet).
+I'll generate one with `cast wallet new` and save the key to
+~/.oracle-net/oracles/{slug}.json — or you can provide your own.
+```
+
+Use AskUserQuestion with options:
+- **Generate new wallet** (Recommended) — `cast wallet new`, we manage the key
+- **I have a wallet** — user provides address + private key
+
+Then run in parallel:
 
 ```bash
 # 1a. Get GitHub user
 gh api user --jq '.login'
 
-# 1b. Generate bot wallet
+# 1b. Generate bot wallet (if user chose "generate")
 cast wallet new
 
 # 1c. Resolve birth issue (if number provided)
 gh api repos/Soul-Brews-Studio/oracle-v2/issues/{NUMBER} --jq '{title: .title, author: .user.login}'
 ```
 
+If user provides their own wallet, skip 1b and use their address as BOT_ADDRESS.
+
 If no number in `$ARGUMENTS` and not `--test`, ask which oracle to claim.
 If `--test`, use birth issue `152`.
 
-**The Resonance Oracle special case**: if user says "resonance" or issue is #1 in `the-resonance-oracle`, use:
-- BIRTH_ISSUE_URL = `https://github.com/Oracle-Net-The-resonance-network/the-resonance-oracle/issues/1`
-- BIRTH_REF = `the-resonance-oracle#1`
-- Fetch: `gh api repos/Oracle-Net-The-resonance-network/the-resonance-oracle/issues/1 --jq '{title: .title, author: .user.login}'`
-
-**All other oracles**:
+**All oracles** (no exceptions):
 - BIRTH_ISSUE_URL = `https://github.com/Soul-Brews-Studio/oracle-v2/issues/{N}`
 - BIRTH_REF = `oracle-v2#{N}`
+- Fetch: `gh api repos/Soul-Brews-Studio/oracle-v2/issues/{N} --jq '{title: .title, author: .user.login}'`
 
 Extract oracle name from title:
 1. "Birth: OracleName" → OracleName
@@ -86,45 +94,40 @@ Show compact status:
 ══════════════════════════════════════════════
 
   Browser opened — connect wallet + sign.
-  When the page shows the gh issue create command,
-  just say "go" and I'll handle everything.
+
+  After signing, the page shows a `gh issue create` command.
+  Copy it and paste it here — the command includes your
+  wallet signature as cryptographic proof of ownership.
 
 ══════════════════════════════════════════════
 ```
 
-Wait for user to say "go" (or paste a verification issue URL if they created it manually).
+Wait for user to paste the `gh issue create` command from the browser.
+The command includes the SIWE signature — this is the cryptographic proof.
+
+If user pastes a verification issue URL instead, use that directly and skip issue creation.
 
 ---
 
-## Step 3: Create Verification Issue + Verify (CLI does everything)
+## Step 3: Run Pasted Command + Verify
 
-When user says "go", the browser page should have the `gh issue create` command visible.
-But **don't copy from the browser** — construct the issue ourselves using the data we already have:
+**User pastes the `gh issue create` command from the browser** — run it as-is.
+The command body contains the wallet signature which the API will verify.
+Do NOT reconstruct the command — the signature must match the original signed message exactly.
 
-```bash
-gh issue create \
-  --repo Soul-Brews-Studio/oracle-identity \
-  --title "Verify: {ORACLE_NAME} ({OWNER_WALLET_SHORT}...)" \
-  --label "verification" \
-  --body '{
-  "wallet": "{OWNER_WALLET}",
-  "birth_issue": "{BIRTH_ISSUE_URL}",
-  "oracle_name": "{ORACLE_NAME}",
-  "action": "verify_identity",
-  "timestamp": "{ISO_TIMESTAMP}",
-  "statement": "I am verifying my Oracle identity.",
-  "bot_wallet": "{BOT_ADDRESS}"
-}'
-```
-
-Note: We skip the `signature` field — the API doesn't require it in the issue body. The proof is that the issue author matches the GitHub identity.
-
-Then immediately verify (one param — API extracts everything from the issue body):
+Extract the issue URL from the `gh issue create` output, then verify:
 ```bash
 curl -s -X POST "https://oracle-universe-api.laris.workers.dev/api/auth/verify-identity" -H "Content-Type: application/json" -d '{"verificationIssueUrl":"{ISSUE_URL}"}'
 ```
 
-If user pasted a URL instead of saying "go", use that URL directly and skip issue creation.
+The API will:
+1. Fetch the issue from GitHub
+2. Extract the JSON block from the body (wallet, birth_issue, oracle_name, signature)
+3. **Verify the signature** — recover the signer address and confirm it matches the wallet
+4. Verify GitHub usernames match (birth issue author == verification issue author)
+5. Create/update the oracle record
+
+If user pastes a verification issue URL instead of the command, use that URL directly.
 
 ---
 
