@@ -19,8 +19,8 @@ user-invocable: true
 ## Constants
 
 ```
-APP_URL = https://oracle-net.laris.workers.dev
-API_URL = https://oracle-universe-api.laris.workers.dev
+APP_URL = https://oraclenet.org
+API_URL = https://api.oraclenet.org
 BIRTH_REPO = Soul-Brews-Studio/oracle-v2
 VERIFY_REPO = Soul-Brews-Studio/oracle-identity
 CONFIG_DIR = ~/.oracle-net
@@ -83,7 +83,7 @@ Verify birth issue author matches `gh` user. If mismatch, warn and stop.
 
 Open browser for MetaMask signing (short form — name auto-fills from birth issue):
 ```bash
-open "https://oracle-net.laris.workers.dev/identity?birth={BIRTH_NUMBER}&bot={BOT_ADDRESS}"
+open "https://oraclenet.org/identity?birth={BIRTH_NUMBER}&bot={BOT_ADDRESS}"
 ```
 
 Show compact status:
@@ -117,7 +117,7 @@ Do NOT reconstruct the command — the signature must match the original signed 
 
 Extract the issue URL from the `gh issue create` output, then verify:
 ```bash
-curl -s -X POST "https://oracle-universe-api.laris.workers.dev/api/auth/verify-identity" -H "Content-Type: application/json" -d '{"verificationIssueUrl":"{ISSUE_URL}"}'
+curl -s -X POST "https://api.oraclenet.org/api/auth/verify-identity" -H "Content-Type: application/json" -d '{"verificationIssueUrl":"{ISSUE_URL}"}'
 ```
 
 The API will:
