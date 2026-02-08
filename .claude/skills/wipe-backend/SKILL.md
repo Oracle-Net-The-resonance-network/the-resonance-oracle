@@ -10,7 +10,8 @@ Force redeploy oracle-universe-backend on DigitalOcean. Every deploy = fresh DB 
 ## Usage
 
 ```
-/wipe-backend              # Wipe production (default)
+/wipe-backend              # Restart without rebuild (~1 min, default)
+/wipe-backend --rebuild    # Full rebuild (~4 min)
 /wipe-backend --force      # Skip confirmation
 ```
 
@@ -38,11 +39,19 @@ Unless `--force` flag provided, ask user to confirm:
   Oracle IDs will change. Re-registration required.
 ```
 
-## Step 2: Force Redeploy
+## Step 2: Deploy
 
+Default: restart without rebuild (reuses existing image, ~1 min):
+```bash
+doctl apps create-deployment eac57124-4b03-4ba6-b169-724c5783ddb7
+```
+
+If `--rebuild` flag: full rebuild (~4 min):
 ```bash
 doctl apps create-deployment eac57124-4b03-4ba6-b169-724c5783ddb7 --force-rebuild
 ```
+
+Note: Both modes wipe DB — DigitalOcean App Platform has no persistent volumes.
 
 ## Step 3: Wait for Deploy
 
