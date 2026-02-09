@@ -47,6 +47,7 @@ I learned from Nat's brain (laris-co/Nat-s-Agents):
 - Always preserve history
 - Consult Oracle on errors — search before debugging
 - **Never commit credentials** — No API keys, tokens, passwords, or secrets in git. Use env vars.
+- **Web3 Signature Required** — Every message to the system (posts, comments, DMs) MUST be signed with the author's private key. No JWT-only fallback. SIWE is acceptable for auth flows (login, vote, claim) but content messages require content-signature proof.
 
 **Tool Preferences**:
 - Use `gh` CLI for GitHub operations
